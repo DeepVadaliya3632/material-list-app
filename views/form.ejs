@@ -1,0 +1,102 @@
+<%- include('partials/header') %>
+
+<section class="form-section">
+  <h1 class="form-title"><%= isEdit ? 'Edit Material' : 'Add New Material' %></h1>
+
+  <% if (error) { %>
+    <div class="alert alert-error" id="form-error">
+      ⚠️ <%= error %>
+    </div>
+  <% } %>
+
+  <form
+    method="POST"
+    action="<%= isEdit ? `/materials/${material.id}` : '/materials' %>"
+    class="material-form"
+    id="material-form"
+  >
+    <div class="form-group">
+      <label for="field-name">Name <span class="required">*</span></label>
+      <input
+        type="text"
+        id="field-name"
+        name="name"
+        value="<%= material.name || '' %>"
+        placeholder="e.g. Portland Cement"
+        required
+      />
+    </div>
+
+    <div class="form-row form-row-2">
+      <div class="form-group">
+        <label for="field-company">Company <span class="required">*</span></label>
+        <input
+          type="text"
+          id="field-company"
+          name="company"
+          value="<%= material.company || '' %>"
+          placeholder="e.g. UltraTech"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="field-supplier">Supplier <span class="required">*</span></label>
+        <input
+          type="text"
+          id="field-supplier"
+          name="supplier"
+          value="<%= material.supplier || '' %>"
+          placeholder="e.g. Sharma Traders"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="field-price">Price <span class="required">*</span></label>
+        <input
+          type="number"
+          id="field-price"
+          name="price"
+          value="<%= material.price != null ? material.price : '' %>"
+          placeholder="0.00"
+          step="0.01"
+          min="0"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="field-quantity">Quantity</label>
+        <input
+          type="number"
+          id="field-quantity"
+          name="quantity"
+          value="<%= material.quantity != null ? material.quantity : '' %>"
+          placeholder="Optional"
+          step="1"
+          min="0"
+        />
+      </div>
+      <div class="form-group">
+        <label for="field-unit">Unit</label>
+        <input
+          type="text"
+          id="field-unit"
+          name="unit"
+          value="<%= material.unit || '' %>"
+          placeholder="e.g. kg, pcs, m"
+        />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" id="btn-submit">
+        <%= isEdit ? 'Update Material' : 'Add Material' %>
+      </button>
+      <a href="/" class="btn btn-ghost" id="btn-cancel">Cancel</a>
+    </div>
+  </form>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,130 @@
+<%- include('partials/header') %>
+
+<section class="list-toolbar">
+  <form method="GET" action="/" class="search-form" id="search-form">
+    <select name="filter" class="filter-select" id="filter-select">
+      <option value="all" <%= filterBy === 'all' ? 'selected' : '' %>>All Fields</option>
+      <option value="name" <%= filterBy === 'name' ? 'selected' : '' %>>Item Name</option>
+      <option value="company" <%= filterBy === 'company' ? 'selected' : '' %>>Company</option>
+      <option value="supplier" <%= filterBy === 'supplier' ? 'selected' : '' %>>Supplier</option>
+    </select>
+    <input
+      type="text"
+      name="q"
+      value="<%= q %>"
+      placeholder="Search…"
+      class="search-input"
+      id="search-input"
+    />
+    <button type="submit" class="btn btn-secondary" id="btn-search">Search</button>
+    <% if (q) { %>
+      <a href="/" class="btn btn-ghost" id="btn-clear-search">Clear</a>
+    <% } %>
+  </form>
+  <div class="list-summary">
+    <span class="badge" id="row-count"><%= materials.length %> item<%= materials.length !== 1 ? 's' : '' %></span>
+  </div>
+</section>
+
+<% if (materials.length === 0) { %>
+  <div class="empty-state" id="empty-state">
+    <p class="empty-icon">🗃️</p>
+    <p>No materials found<%= q ? ` matching "${q}"` : '' %>.</p>
+    <a href="/new" class="btn btn-primary">Add your first material</a>
+  </div>
+<% } else { %>
+  <div class="table-wrapper">
+    <table class="data-table" id="materials-table">
+      <colgroup>
+        <col class="col-name" />
+        <col class="col-company" />
+        <col class="col-supplier" />
+        <col class="col-price" />
+        <col class="col-quantity" />
+        <col class="col-unit" />
+        <col class="col-actions" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Company</th>
+          <th>Supplier</th>
+          <th class="num">Price</th>
+          <th class="num">Quantity</th>
+          <th>Unit</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% materials.forEach(m => { %>
+          <tr id="material-row-<%= m.id %>">
+            <td data-label="Name"><%= m.name %></td>
+            <td data-label="Company"><%= m.company %></td>
+            <td data-label="Supplier"><%= m.supplier || '—' %></td>
+            <td data-label="Price" class="num">₹<%= parseFloat(m.price).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></td>
+            <td data-label="Quantity" class="num"><%= m.quantity != null ? m.quantity.toLocaleString('en-IN') : '—' %></td>
+            <td data-label="Unit"><%= m.unit || '—' %></td>
+            <td data-label="Actions" class="actions-cell">
+              <a href="/materials/<%= m.id %>/edit" class="btn btn-sm btn-secondary" id="btn-edit-<%= m.id %>">Edit</a>
+              <button
+                type="button"
+                class="btn btn-sm btn-danger"
+                id="btn-delete-<%= m.id %>"
+                onclick="openDeleteModal('<%= m.name.replace(/'/g, "\\'") %>', '/materials/<%= m.id %>/delete')"
+              >Delete</button>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div class="modal-icon">🗑️</div>
+    <h2 class="modal-title" id="modal-title">Delete Material</h2>
+    <p class="modal-body">
+      Are you sure you want to delete <strong id="modal-material-name"></strong>?
+      This action cannot be undone.
+    </p>
+    <form method="POST" id="delete-form">
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
+        <button type="submit" class="btn btn-danger" id="modal-confirm">Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('delete-modal');
+  const modalName = document.getElementById('modal-material-name');
+  const deleteForm = document.getElementById('delete-form');
+
+  function openDeleteModal(name, action) {
+    modalName.textContent = name;
+    deleteForm.action = action;
+    modal.classList.add('active');
+    document.getElementById('modal-cancel').focus();
+  }
+
+  function closeDeleteModal() {
+    modal.classList.remove('active');
+  }
+
+  // Close on backdrop click
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) closeDeleteModal();
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeDeleteModal();
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

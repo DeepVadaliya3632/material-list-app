@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Material inventory tracker — manage stock, prices, and suppliers." />
+  <title>Material List</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <span class="logo-icon">📦</span> Material List
+      </a>
+      <% if (locals.loggedIn) { %>
+        <div class="header-actions">
+          <a href="/new" class="btn btn-primary" id="btn-add-material">+ Add Material</a>
+          <form method="POST" action="/logout" style="display: inline;">
+            <button type="submit" class="btn btn-secondary btn-sm" id="btn-logout">Logout</button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  </header>
+  <main class="container">
