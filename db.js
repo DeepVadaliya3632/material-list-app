@@ -35,6 +35,11 @@ async function migrate() {
     ALTER TABLE materials ADD COLUMN IF NOT EXISTS quantity INTEGER CHECK (quantity >= 0);
   `);
 
+  /* Add gst_type column */
+  await pool.query(`
+    ALTER TABLE materials ADD COLUMN IF NOT EXISTS gst_type TEXT NOT NULL DEFAULT 'without_gst';
+  `);
+
   /* Drop the old supply column if it still exists */
   await pool.query(`
     ALTER TABLE materials DROP COLUMN IF EXISTS supply;

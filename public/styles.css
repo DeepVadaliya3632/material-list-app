@@ -227,11 +227,12 @@ a {
   table-layout: fixed;
 }
 
-.data-table col.col-name     { width: 20%; }
-.data-table col.col-company  { width: 16%; }
-.data-table col.col-supplier { width: 16%; }
-.data-table col.col-price    { width: 14%; }
-.data-table col.col-quantity  { width: 12%; }
+.data-table col.col-name     { width: 17%; }
+.data-table col.col-company  { width: 14%; }
+.data-table col.col-supplier { width: 14%; }
+.data-table col.col-price    { width: 12%; }
+.data-table col.col-gst      { width: 9%; }
+.data-table col.col-quantity  { width: 10%; }
 .data-table col.col-unit     { width: 8%; }
 .data-table col.col-actions  { width: 14%; }
 
@@ -387,6 +388,96 @@ a {
 
 .form-actions .btn-primary {
   padding: 0.7rem 1.6rem;
+}
+
+/* ── Radio Group (GST toggle) ───────────────────────────────────────── */
+.radio-group {
+  display: flex;
+  gap: 0;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  width: fit-content;
+}
+
+.radio-option {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.radio-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-dim);
+  transition: all var(--transition);
+  user-select: none;
+  white-space: nowrap;
+  border-right: 1px solid var(--color-border);
+}
+
+.radio-option:last-child .radio-pill {
+  border-right: none;
+}
+
+.radio-option input[type="radio"]:checked + .radio-pill {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.radio-option:hover .radio-pill {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+
+.radio-option input[type="radio"]:checked + .radio-pill:hover {
+  background: var(--color-primary-h);
+  color: #fff;
+}
+
+.radio-option input[type="radio"]:focus-visible + .radio-pill {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* ── GST Badge ──────────────────────────────────────────────────────── */
+.gst-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.gst-yes {
+  background: rgba(0, 206, 201, 0.12);
+  color: var(--color-accent);
+  border: 1px solid rgba(0, 206, 201, 0.3);
+}
+
+.gst-no {
+  background: rgba(139, 143, 163, 0.1);
+  color: var(--color-text-dim);
+  border: 1px solid rgba(139, 143, 163, 0.2);
 }
 
 /* ── Alert ────────────────────────────────────────────────────────────── */
@@ -579,11 +670,12 @@ a {
 
   /* ── Price / Supply / Unit = inline grid ── */
   .data-table td[data-label="Price"],
+  .data-table td[data-label="GST"],
   .data-table td[data-label="Quantity"],
   .data-table td[data-label="Unit"] {
     display: inline-flex;
     flex-direction: column;
-    width: 33.33%;
+    width: 25%;
     padding: 0.45rem 0.25rem 0.45rem 0;
     text-align: left;
     border-bottom: none;
@@ -592,6 +684,7 @@ a {
   }
 
   .data-table td[data-label="Price"]::before,
+  .data-table td[data-label="GST"]::before,
   .data-table td[data-label="Quantity"]::before,
   .data-table td[data-label="Unit"]::before {
     content: attr(data-label);

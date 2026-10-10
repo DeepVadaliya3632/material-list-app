@@ -134,12 +134,13 @@ app.get('/new', (_req, res) => {
 
 // Create material
 app.post('/materials', async (req, res) => {
-  const { name, company, supplier, price, quantity, unit } = req.body;
+  const { name, company, supplier, price, quantity, unit, gst_type } = req.body;
   const error = validateMaterial({ name, company, supplier, price, quantity });
+  const gstValue = gst_type === 'with_gst' ? 'with_gst' : 'without_gst';
 
   if (error) {
     return res.status(400).render('form', {
-      material: { name, company, supplier, price, quantity, unit },
+      material: { name, company, supplier, price, quantity, unit, gst_type: gstValue },
       error,
       isEdit: false,
     });
@@ -149,15 +150,15 @@ app.post('/materials', async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO materials (name, company, supplier, price, quantity, unit)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [name.trim(), company.trim(), supplier.trim(), Number(price), qtyValue, unit ? unit.trim() : null]
+      `INSERT INTO materials (name, company, supplier, price, quantity, unit, gst_type)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [name.trim(), company.trim(), supplier.trim(), Number(price), qtyValue, unit ? unit.trim() : null, gstValue]
     );
     res.redirect('/');
   } catch (err) {
     console.error('POST /materials error:', err);
     res.status(500).render('form', {
-      material: { name, company, supplier, price, quantity, unit },
+      material: { name, company, supplier, price, quantity, unit, gst_type: gstValue },
       error: 'Failed to save material. Please try again.',
       isEdit: false,
     });
@@ -180,12 +181,13 @@ app.get('/materials/:id/edit', async (req, res) => {
 
 // Update material
 app.post('/materials/:id', async (req, res) => {
-  const { name, company, supplier, price, quantity, unit } = req.body;
+  const { name, company, supplier, price, quantity, unit, gst_type } = req.body;
   const error = validateMaterial({ name, company, supplier, price, quantity });
+  const gstValue = gst_type === 'with_gst' ? 'with_gst' : 'without_gst';
 
   if (error) {
     return res.status(400).render('form', {
-      material: { id: req.params.id, name, company, supplier, price, quantity, unit },
+      material: { id: req.params.id, name, company, supplier, price, quantity, unit, gst_type: gstValue },
       error,
       isEdit: true,
     });
@@ -196,17 +198,17 @@ app.post('/materials/:id', async (req, res) => {
   try {
     const result = await pool.query(
       `UPDATE materials
-       SET name = $1, company = $2, supplier = $3, price = $4, quantity = $5, unit = $6, updated_at = NOW()
-       WHERE id = $7
+       SET name = $1, company = $2, supplier = $3, price = $4, quantity = $5, unit = $6, gst_type = $7, updated_at = NOW()
+       WHERE id = $8
        RETURNING *`,
-      [name.trim(), company.trim(), supplier.trim(), Number(price), qtyValue, unit ? unit.trim() : null, req.params.id]
+      [name.trim(), company.trim(), supplier.trim(), Number(price), qtyValue, unit ? unit.trim() : null, gstValue, req.params.id]
     );
     if (result.rows.length === 0) return res.status(404).send('Material not found');
     res.redirect('/');
   } catch (err) {
     console.error('POST /materials/:id error:', err);
     res.status(500).render('form', {
-      material: { id: req.params.id, name, company, supplier, price, quantity, unit },
+      material: { id: req.params.id, name, company, supplier, price, quantity, unit, gst_type: gstValue },
       error: 'Failed to update material. Please try again.',
       isEdit: true,
     });

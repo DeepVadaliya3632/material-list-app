@@ -90,6 +90,32 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label>Price Type <span class="required">*</span></label>
+      <div class="radio-group" id="gst-radio-group">
+        <label class="radio-option" for="gst-without" id="label-gst-without">
+          <input
+            type="radio"
+            id="gst-without"
+            name="gst_type"
+            value="without_gst"
+            <%= (!material.gst_type || material.gst_type === 'without_gst') ? 'checked' : '' %>
+          />
+          <span class="radio-pill">Without GST</span>
+        </label>
+        <label class="radio-option" for="gst-with" id="label-gst-with">
+          <input
+            type="radio"
+            id="gst-with"
+            name="gst_type"
+            value="with_gst"
+            <%= material.gst_type === 'with_gst' ? 'checked' : '' %>
+          />
+          <span class="radio-pill">With GST</span>
+        </label>
+      </div>
+    </div>
+
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" id="btn-submit">
         <%= isEdit ? 'Update Material' : 'Add Material' %>

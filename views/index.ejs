@@ -40,6 +40,7 @@
         <col class="col-company" />
         <col class="col-supplier" />
         <col class="col-price" />
+        <col class="col-gst" />
         <col class="col-quantity" />
         <col class="col-unit" />
         <col class="col-actions" />
@@ -50,6 +51,7 @@
           <th>Company</th>
           <th>Supplier</th>
           <th class="num">Price</th>
+          <th>GST</th>
           <th class="num">Quantity</th>
           <th>Unit</th>
           <th class="actions-col">Actions</th>
@@ -62,6 +64,11 @@
             <td data-label="Company"><%= m.company %></td>
             <td data-label="Supplier"><%= m.supplier || '—' %></td>
             <td data-label="Price" class="num">₹<%= parseFloat(m.price).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></td>
+            <td data-label="GST">
+              <span class="gst-badge <%= m.gst_type === 'with_gst' ? 'gst-yes' : 'gst-no' %>">
+                <%= m.gst_type === 'with_gst' ? 'GST' : 'No GST' %>
+              </span>
+            </td>
             <td data-label="Quantity" class="num"><%= m.quantity != null ? m.quantity.toLocaleString('en-IN') : '—' %></td>
             <td data-label="Unit"><%= m.unit || '—' %></td>
             <td data-label="Actions" class="actions-cell">
