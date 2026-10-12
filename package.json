@@ -8,7 +8,7 @@
     "seed": "node seed.js"
   },
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "dependencies": {
     "dotenv": "^18.0.1",
